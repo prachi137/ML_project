@@ -1,0 +1,86 @@
+importing libraries
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+create the data frame
+
+dataframe = pd.read_csv("/content/drive/MyDrive/Zomato data .csv")
+print(dataframe)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+dataframe
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+convert the datatype of column rate
+
+def handleRate(value):
+  value = str(value).split('/')
+  value = value[0];
+  return float(value)
+
+dataframe['rate'] = dataframe['rate'].apply(handleRate)
+print(dataframe.head())
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+dataframe.info()
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+type of resturant
+
+dataframe.head()
+
+sns.countplot(x=dataframe['listed_in(type)'])
+plt.xlabel('type of resturant')
+
+conclusion - majority of the resturant falls in dinning category
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+dataframe.head()
+
+grouped_data = dataframe.groupby('listed_in(type)')['votes'].sum()
+result = pd.DataFrame({'votes':grouped_data})
+plt.plot(result, c="green", marker='o')
+plt.xlabel('type of resturant',c='red',size=20)
+plt.ylabel('votes',c='red',size=20)
+
+coclusion- dinning resturants has received maximum votes
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+dataframe.head()
+
+plt.hist(dataframe['rate'],bins=5)
+plt.title('ratings distribution')
+plt.show()
+
+conclusion- the majority resturant received rating from 3.5 to 4
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+average order spending by couples
+
+dataframe.head()
+couple_data=dataframe['approx_cost(for two people)']
+sns.distplot(x=couple_data)
+
+conclusion = the majority of couples prefer resturants with an approximate cost of 300 rupees
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+which mode receives maximum rating-
+
+dataframe.head()
+
+plt.figure(figsize = (6,6))
+sns.boxplot(x = 'online_order', y = 'rate',data = dataframe)
+
+conclusion- offline order received lower rating in comparison to online
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+pivot_table = dataframe.pivot_table(index='listed_in(type)', columns='online_order',aggfunc='size',fill_value=0)
+sns.heatmap(pivot_table, annot=True,cmap='YlGnBu',fmt='d')
+plt.title("heatmap")
+plt.xlabel("online_order")
+plt.ylabel(("Listed In(Type)"))
+plt.show()
+
+coclusion-dining resturant primarily accept offline order whereas cafes received online order. this suggest that client prefers order in person in restaurants,but pefer online ordering at cafe
+
+
+
+
+
+
+
+
